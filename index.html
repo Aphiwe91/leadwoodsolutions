@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="icon" type="image/png" href="favicon.png">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+<title>Leadwood Solutions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;1,600;1,700&family=Inter:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --black: #050505;
+    --panel: #0d0d0d;
+    --panel-elevated: #141414;
+    --line: rgba(255,255,255,0.16);
+    --line-soft: rgba(255,255,255,0.08);
+    --ink: #f4f4f2;
+    --muted: #9a9a96;
+    --muted-soft: #6f6f6b;
+    --white: #ffffff;
+    --accent: #10b981;
+  }
+  *{ margin:0; padding:0; box-sizing:border-box; }
+  html{ scroll-behavior:smooth; text-size-adjust:100%; -webkit-text-size-adjust:100%; }
+  body{
+    background: var(--black);
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-weight:300;
+    line-height:1.65;
+    overflow-x:hidden;
+    background-image: 
+      radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.04) 0%, transparent 60%),
+      radial-gradient(circle at 80% 40%, rgba(255, 255, 255, 0.02) 0%, transparent 50%),
+      radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.03) 0%, transparent 50%);
+    background-attachment: fixed;
+  }
+  h1,h2,h3,h4{
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-weight:500;
+    letter-spacing:-0.02em;
+    color: var(--white);
+  }
+  em{
+    font-style: italic;
+    font-weight:600;
+  }
+  a{ color:inherit; text-decoration:none; }
+  img{ max-width:100%; height:auto; display:block; }
+
+  /* ---------- Ambient background overlay ---------- */
+  .bg-ambient-overlay {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background: 
+      radial-gradient(circle at 50% -10%, rgba(255, 255, 255, 0.06), transparent 50%),
+      radial-gradient(circle at 10% 50%, rgba(255, 255, 255, 0.02), transparent 40%),
+      radial-gradient(circle at 90% 85%, rgba(255, 255, 255, 0.03), transparent 45%);
+    opacity: 0.85;
+  }
+  .ripple-bg{
+    position:absolute; inset:0;
+    overflow:hidden;
+    pointer-events:none;
+    z-index:0;
+    background-size:cover;
+    background-position:center;
+    background-repeat:no-repeat;
+    background-image: linear-gradient(to right, rgba(5,5,5,0.85), rgba(5,5,5,0.6)), url('chevron-stripes-geometric-lines_1409-8687.avif');
+    opacity:0.38;
+    mix-blend-mode:luminosity;
+  }
+  .ripple-bg.hero-img, .ripple-bg.tunnel-img, .ripple-bg.team-img{ 
+    background-image: linear-gradient(to right, rgba(5,5,5,0.85), rgba(5,5,5,0.6)), url('chevron-stripes-geometric-lines_1409-8687.avif');
+    background-position:center; 
+    background-size:cover;
+    opacity:0.38;
+  }
+  .ripple-bg.services-img{ 
+    background-image: linear-gradient(to bottom, rgba(5,5,5,0.82), rgba(5,5,5,0.7)), url('images.jpeg');
+    background-position:center; 
+    background-size:cover;
+    opacity:0.4;
+  }
+  .ripple-bg.closing-img{ 
+    background-image: linear-gradient(to top, rgba(5,5,5,0.85), rgba(5,5,5,0.65)), url('abstract-black-white-gradient-backgroud-modern-design_677411-2941.avif');
+    background-position:center; 
+    background-size:cover;
+    opacity:0.45;
+  }
+
+  /* ---------- Navigation Bar ---------- */
+  nav{
+    position:fixed; top:0; left:0; right:0;
+    display:flex; justify-content:space-between; align-items:center;
+    padding: 14px min(6vw, 64px);
+    z-index:100;
+    background: rgba(5,5,5,0.92);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--line-soft);
+  }
+  .brand{ display:flex; align-items:center; gap:12px; flex-shrink:0; }
+  .brand img{ height:38px; width:auto; }
+  .navlinks{ display:flex; align-items:center; gap:10px; }
+  .navlinks a{ 
+    font-weight: 600; 
+    font-size: 13px; 
+    letter-spacing: 0.06em; 
+    text-transform: uppercase; 
+    color: var(--white); 
+    padding: 8px 16px; 
+    border-radius: 20px; 
+    background: rgba(255, 255, 255, 0.05); 
+    border: 1px solid rgba(255, 255, 255, 0.12); 
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); 
+    white-space: nowrap; 
+  }
+  .navlinks a:hover{ 
+    background: rgba(255, 255, 255, 0.95); 
+    color: var(--black); 
+    border-color: var(--white); 
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.3); 
+    transform: translateY(-1px); 
+  }
+  @media (max-width:768px){ 
+    nav{ padding:12px 16px; gap:8px; }
+    .brand{ gap:8px; }
+    .brand img.animated-glow-logo{ height:36px !important; width:36px !important; }
+    .brand img:last-child{ height:30px !important; }
+    .navlinks{ gap:6px; } 
+    .navlinks a{ padding: 6px 11px; font-size: 11px; letter-spacing:0.04em; }
+  }
+  @media (max-width:480px){
+    nav{ padding:10px 12px; justify-content:space-between; }
+    .brand{ gap:6px; }
+    .brand img.animated-glow-logo{ height:30px !important; width:30px !important; }
+    .brand img:last-child{ height:26px !important; }
+    .navlinks{ gap:4px; }
+    .navlinks a{ padding: 5px 8px; font-size: 9.5px; letter-spacing:0.02em; border-radius:14px; }
+  }
+
+  /* ---------- Hero Section ---------- */
+  .hero{
+    position:relative;
+    min-height:100vh;
+    min-height:100dvh;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    text-align:center;
+    padding: 120px min(5vw, 48px) 80px;
+  }
+  .hero h1{
+    position:relative; z-index:2;
+    font-size:clamp(32px, 5.5vw, 68px);
+    line-height:1.15;
+    max-width:960px;
+    margin: 0 auto;
+  }
+  .hero p.sub{
+    position:relative; z-index:2;
+    margin:24px auto 0;
+    color:var(--white);
+    max-width:600px;
+    font-size:clamp(15px, 2vw, 17px);
+    line-height:1.7;
+  }
+  .cta-row{ 
+    position:relative; z-index:2; 
+    margin-top:40px; 
+    display:flex; gap:16px; flex-wrap:wrap; justify-content:center; align-items:center;
+  }
+  .btn{
+    display:inline-flex; align-items:center; justify-content:center;
+    padding:14px 30px;
+    border:1px solid var(--line);
+    border-radius:4px;
+    font-size:14px;
+    letter-spacing:0.04em;
+    transition: all .25s ease;
+    cursor:pointer;
+  }
+  .btn.solid{ background:var(--white); color:var(--black); border-color:var(--white); font-weight:500; }
+  .btn.solid:hover{ background:transparent; color:var(--white); }
+  .btn.ghost:hover{ border-color:var(--white); background:rgba(255,255,255,0.05); }
+
+  .btn.whatsapp-btn{
+    gap:12px;
+    height:54px; padding:0 28px;
+    border-radius:27px;
+  }
+  .btn.whatsapp-btn svg{ width:24px; height:24px; flex-shrink:0; }
+  .btn.whatsapp-btn svg path{ fill:var(--black); transition: fill .25s ease; }
+  .btn.whatsapp-btn:hover svg path{ fill:var(--white); }
+  .btn.whatsapp-btn span{ white-space:nowrap; font-weight:500; }
+
+  .eyebrow-foot{
+    position:absolute; bottom:28px; left:min(6vw, 64px); right:min(6vw, 64px);
+    display:flex; align-items:center; gap:20px;
+    z-index:2;
+  }
+  .eyebrow-foot .tag{
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif;
+    font-size:11px; letter-spacing:0.15em; color:var(--muted-soft);
+    white-space:nowrap;
+  }
+  .eyebrow-foot .rule{ flex:1; height:1px; background:var(--line-soft); }
+  @media (max-width:768px){ 
+    .hero{ padding-bottom: 70px; }
+    .eyebrow-foot{ 
+      position:absolute; 
+      bottom:20px; left:16px; right:16px; 
+      margin-top:0; padding:0; 
+      width:auto; 
+      display:flex; 
+      flex-direction:row; 
+      justify-content:space-between; 
+      align-items:center; 
+      gap:10px; 
+    } 
+    .eyebrow-foot .tag{ font-size:10.5px; letter-spacing:0.06em; }
+    .eyebrow-foot .rule{ flex:1; }
+  }
+  @media (max-width:440px){
+    .eyebrow-foot{
+      bottom:16px; left:12px; right:12px;
+      gap:6px;
+    }
+    .eyebrow-foot .tag{ font-size:9.5px; letter-spacing:0.04em; }
+  }
+
+  .section-rule{ height:1px; background:var(--line-soft); margin:24px 0 0; }
+
+  /* ---------- Section Layout Shell ---------- */
+  section{ position:relative; padding: clamp(60px, 10vh, 120px) min(6vw, 64px); }
+  .eyebrow{
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif;
+    font-size:11px; letter-spacing:0.2em; color:var(--muted-soft);
+    margin-bottom:16px; display:block; text-transform:uppercase;
+  }
+  .section-title{ font-size:clamp(26px, 3.8vw, 44px); margin-bottom:20px; max-width:800px; line-height:1.2; }
+  .section-lede{ color:var(--muted); max-width:640px; font-size:15.5px; line-height:1.75; }
+
+  /* ---------- Welcome Section ---------- */
+  .welcome{ 
+    display:grid; 
+    grid-template-columns: 1.1fr 0.9fr; 
+    gap:clamp(32px, 5vw, 64px); 
+    align-items:center; 
+    background:var(--panel); 
+    border-top:1px solid var(--line-soft);
+    border-bottom:1px solid var(--line-soft);
+  }
+  .welcome-copy p{ color:var(--muted); font-size:15.5px; line-height:1.8; margin-top:20px; }
+  .welcome-copy p strong{ color:var(--ink); font-weight:500; }
+  .welcome-visual{
+    position:relative;
+    width:100%;
+    aspect-ratio: 4/3;
+    max-height: 420px;
+    border-radius:6px;
+    border:1px solid var(--line-soft);
+    overflow:hidden;
+    background:var(--black);
+  }
+  .welcome-visual img{ width:100%; height:100%; object-fit:cover; object-position:center; }
+  @media (max-width:960px){ 
+    .welcome{ grid-template-columns:1fr; } 
+    .welcome-visual{ aspect-ratio:auto; max-height:none; min-height:180px; padding:24px 16px !important; flex-wrap:wrap; } 
+    .welcome-visual img.animated-glow-logo{ height:80px !important; width:80px !important; }
+    .welcome-visual img:last-child{ height:50px !important; max-width:80%; }
+  }
+  @media (max-width:480px){
+    .welcome-visual{ gap:16px !important; padding:20px 12px !important; }
+    .welcome-visual img.animated-glow-logo{ height:64px !important; width:64px !important; }
+    .welcome-visual img:last-child{ height:40px !important; }
+  }
+
+  /* ---------- Services Grid ---------- */
+  .services-grid{
+    margin-top:48px;
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(320px, 1fr));
+    gap:24px;
+  }
+  .service-col{
+    padding:32px;
+    background:var(--panel);
+    border:1px solid var(--line-soft);
+    border-radius:6px;
+    transition:transform 0.25s ease, border-color 0.25s ease;
+    display:flex; flex-direction:column;
+  }
+  .service-col:hover{
+    border-color:var(--line);
+    transform:translateY(-3px);
+  }
+  .service-head h3{ font-size:20px; line-height:1.3; margin-bottom:16px; }
+  .service-col ul{ list-style:none; margin-top:0; }
+  .service-col li{
+    position:relative;
+    color:var(--muted); font-size:14.5px; line-height:1.6;
+    padding:10px 0 10px 18px; border-top:1px solid var(--line-soft);
+  }
+  .service-col li::before{
+    content:''; position:absolute; left:0; top:50%; transform:translateY(-50%);
+    width:5px; height:5px; border-radius:50%; background:var(--muted-soft);
+  }
+  .service-col li:first-child{ border-top:none; }
+
+  /* ---------- Dark Statement ---------- */
+  .statement{
+    padding: clamp(80px, 12vh, 140px) min(6vw, 64px);
+    display:flex; align-items:center; justify-content:center;
+    text-align:center;
+  }
+  .statement h2{ font-size:clamp(28px, 4.5vw, 48px); max-width:860px; line-height:1.25; }
+
+  /* ---------- Team Section ---------- */
+  .objectives{ background:var(--panel); border-top:1px solid var(--line-soft); }
+  .team-grid{ margin-top:48px; display:flex; flex-direction:column; gap:28px; }
+  .team-member{
+    display:grid; 
+    grid-template-columns:160px 1fr; 
+    gap:36px; 
+    align-items:center;
+    padding:36px; 
+    background:var(--black); 
+    border:1px solid var(--line-soft); 
+    border-radius:6px;
+    transition:border-color 0.25s ease;
+  }
+  .team-member:hover{ border-color:var(--line); }
+  .avatar{
+    width:150px; height:150px; border-radius:50%;
+    border:1px solid var(--line);
+    overflow:hidden; flex:none;
+    margin:0 auto;
+  }
+  .avatar img{ width:100%; height:100%; object-fit:cover; object-position:50% 20%; border-radius:50%; }
+  .team-name{ font-size:20px; margin-bottom:4px; }
+  .team-role{ color:var(--muted-soft); font-size:13px; letter-spacing:0.04em; margin-bottom:14px; font-family:'IBM Plex Mono', monospace; }
+  .team-bio{ color:var(--muted); font-size:14.5px; line-height:1.75; }
+  @media (max-width:768px){ 
+    .team-member{ grid-template-columns:1fr; text-align:center; padding:28px 20px; } 
+    .avatar{ width:130px; height:130px; }
+  }
+
+  /* ---------- Closing CTA & Footer ---------- */
+  .closing{
+    padding: clamp(90px, 14vh, 160px) min(6vw, 64px);
+    display:flex; flex-direction:column; align-items:center; justify-content:center; 
+    text-align:center;
+  }
+  .closing h2{ font-size:clamp(26px, 4vw, 46px); max-width:840px; line-height:1.3; margin-bottom:36px; }
+
+  footer{
+    padding:28px min(6vw, 64px); 
+    display:flex; justify-content:space-between; align-items:center;
+    border-top:1px solid var(--line-soft);
+    font-size:12.5px; color:var(--muted-soft); letter-spacing:0.05em;
+  }
+  @media (max-width:640px){ 
+    footer{ 
+      flex-direction:row; 
+      justify-content:space-between; 
+      align-items:center; 
+      padding:20px 16px; 
+      font-size:11.5px; 
+      gap:12px; 
+      text-align:left; 
+    } 
+    .cta-row{ flex-direction:column; width:100%; }
+    .btn{ width:100%; }
+  }
+  @media (max-width:400px){
+    footer{
+      flex-direction:column;
+      justify-content:center;
+      align-items:center;
+      gap:6px;
+      text-align:center;
+    }
+  }
+
+  .reveal{ opacity:0; transform:translateY(20px); transition: opacity .7s ease, transform .7s ease; }
+  .reveal.in{ opacity:1; transform:translateY(0); }
+  
+  @keyframes logoPulseGlow {
+    0% {
+      filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.8)) drop-shadow(0 0 18px rgba(16, 185, 129, 0.6));
+      transform: scale(1);
+    }
+    50% {
+      filter: drop-shadow(0 0 22px rgba(255, 255, 255, 1)) drop-shadow(0 0 35px rgba(16, 185, 129, 0.9));
+      transform: scale(1.06);
+    }
+    100% {
+      filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.8)) drop-shadow(0 0 18px rgba(16, 185, 129, 0.6));
+      transform: scale(1);
+    }
+  }
+  .animated-glow-logo {
+    animation: logoPulseGlow 3s infinite ease-in-out;
+  }
+  @media (prefers-reduced-motion: reduce){ .reveal{ opacity:1; transform:none; transition:none; } .animated-glow-logo{ animation:none; } }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="brand" style="display:flex; align-items:center; gap:16px;">
+    <img src="favicon-nobg.png" alt="Favicon Logo" class="animated-glow-logo" style="height:56px; width:56px; object-fit:contain;">
+    <img src="leadwood.png" alt="Leadwood Logo" style="height:48px; width:auto; object-fit:contain;">
+  </div>
+  <div class="navlinks">
+    <a href="#services">Services</a>
+    <a href="#welcome">Gallery</a>
+    <a href="#contact">Contact</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" style="padding-top:0; padding-bottom:0;">
+  <div class="ripple-bg hero-img"></div>
+  <h1>Harnessing the power of<br><em>people, processes and technology</em></h1>
+  <p class="sub"><strong>Your trusted  consulting and digital solutions partner.</strong></p>
+  <div class="cta-row">
+    <a href="tel:+27764365295" class="btn solid whatsapp-btn" aria-label="Start a conversation on WhatsApp">
+      <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><path d="M16.004 3C9.076 3 3.5 8.576 3.5 15.5c0 2.36.652 4.564 1.79 6.448L3 29l7.234-2.253A12.42 12.42 0 0 0 16.004 28C22.932 28 28.5 22.424 28.5 15.5 28.5 8.576 22.932 3 16.004 3zm0 22.65c-2.06 0-3.98-.58-5.62-1.583l-.402-.24-4.293 1.337 1.36-4.183-.263-.43a10.11 10.11 0 0 1-1.586-5.451c0-5.61 4.567-10.177 10.804-10.177 5.94 0 10.797 4.567 10.797 10.177 0 5.61-4.857 10.55-10.797 10.55zm5.914-7.86c-.324-.163-1.917-.946-2.214-1.054-.297-.108-.513-.163-.729.163-.216.325-.836 1.054-1.025 1.271-.189.216-.378.243-.702.081-.324-.163-1.368-.504-2.606-1.61-.963-.859-1.613-1.92-1.802-2.245-.189-.325-.02-.5.143-.663.147-.146.324-.379.486-.569.162-.19.216-.325.324-.541.108-.216.054-.406-.027-.569-.081-.163-.729-1.756-.999-2.404-.263-.632-.53-.546-.729-.556-.189-.01-.405-.012-.621-.012a1.192 1.192 0 0 0-.864.406c-.297.325-1.134 1.108-1.134 2.702s1.161 3.133 1.323 3.35c.162.216 2.286 3.489 5.539 4.893.774.334 1.377.534 1.847.684.776.247 1.482.212 2.041.129.623-.093 1.917-.783 2.187-1.54.27-.758.27-1.407.189-1.541-.081-.135-.297-.216-.621-.379z"/></svg>
+      <span>Start a conversation</span>
+    </a>
+    <a href="#services" class="btn solid whatsapp-btn" aria-label="See our services">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z" fill="currentColor"/></svg>
+      <span>See our services...</span>
+    </a>
+  </div>
+  <div class="eyebrow-foot">
+    <span class="tag">© 2009 Leadwood Solutions</span>
+    <div class="rule"></div>
+    <span class="tag">Sunninghill, Sandton</span>
+  </div>
+</section>
+
+<!-- WELCOME -->
+<section class="welcome reveal" style="position:relative; background: linear-gradient(to right, rgba(5,5,5,0.78), rgba(5,5,5,0.65)), url('download.jpeg') center/cover no-repeat;">
+  <div class="welcome-copy">
+    <span class="eyebrow"></span>
+    <h2 class="section-title">Welcome to <em>Leadwood Solutions</em></h2>
+    <p>Leadwood is a consulting services and IT solutions provider. It has expertise in business and digital transformation. It utilises emerging digital technologies such as AI, data exchange, cybersecurity and cloud solutions to deliver solutions.</p>
+    <p>Given that data is the lifeblood of the digital economy, Leadwood enables organisations to unlocks its <strong>intrinsic value.</strong> </p>
+    <p>Leadwood supports governments in the development and management of <strong>Digital Public Infrastructure (DPI).</strong> </p>
+  </div>
+  <div class="welcome-visual" style="display:flex; align-items:center; justify-content:center; gap:24px; padding:32px; background:rgba(5,5,5,0.6); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);">
+    <img src="favicon-nobg.png" alt="Favicon Logo" class="animated-glow-logo" style="height:120px; width:120px; object-fit:contain;">
+    <img src="leadwood.png" alt="Leadwood Logo" style="height:70px; width:auto; object-fit:contain;">
+  </div>
+</section>
+
+<!-- GALLERY SHOWCASE -->
+<section id="gallery" class="reveal" style="background:var(--panel); border-top:1px solid var(--line-soft); border-bottom:1px solid var(--line-soft);">
+  <span class="eyebrow">Visual Portfolio</span>
+  <h2 class="section-title">Explore Our <em>Gallery & Media</em></h2>
+  <div class="gallery-grid" style="margin-top:40px; display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:24px;">
+    <div class="gallery-card" style="border:1px solid var(--line-soft); border-radius:6px; overflow:hidden; aspect-ratio:16/9; background:var(--black);">
+      <img src="abstract-black-white-gradient-backgroud-modern-design_677411-2941.avif" alt="Abstract Black & White Gradient" style="width:100%; height:100%; object-fit:cover; transition:transform 0.3s ease;">
+    </div>
+    <div class="gallery-card" style="border:1px solid var(--line-soft); border-radius:6px; overflow:hidden; aspect-ratio:16/9; background:var(--black);">
+      <img src="chevron-stripes-geometric-lines_1409-8687.avif" alt="Chevron Stripes Geometric Lines" style="width:100%; height:100%; object-fit:cover; transition:transform 0.3s ease;">
+    </div>
+    <div class="gallery-card" style="border:1px solid var(--line-soft); border-radius:6px; overflow:hidden; aspect-ratio:16/9; background:var(--black);">
+      <img src="images.jpeg" alt="Modern Graphic Texture" style="width:100%; height:100%; object-fit:cover; transition:transform 0.3s ease;">
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services" class="reveal">
+  <div class="ripple-bg services-img"></div>
+  <span class="eyebrow"></span>
+  <h2 class="section-title"><em>What we do?</em></h2>
+  <div class="section-rule"></div>
+  <div class="services-grid">
+    <div class="service-col">
+      <div class="service-head">
+        <h3>Digital Transformations Services</h3>
+      </div>
+      <ul>
+        <li>Digital Transformation readiness assessment and advisory services</li>
+        <li>Solution Architecture and Project Management</li>
+        <li>Open Finance DPI</li>
+        <li>Data exchange platform (X-Road technology)</li>
+        <li>Cybersecurity</li>
+        <li>Cloud Infrastructure and Services</li>
+        <li>Artificial Intelligence</li>
+        <li>IT Service Management (ITSM)</li>
+        <li>ICT Governance</li>
+      </ul>
+    </div>
+
+    <div class="service-col">
+      <div class="service-head">
+        <h3>Business Transformation Services</h3>
+      </div>
+      <ul>
+        <li>Agile Strategy Development</li>
+        <li>Operating Model 4.0 Development</li>
+        <li>Business Processes Re-design</li>
+        <li>Customer Journeys Mapping</li>
+        <li>Business Architecture</li>
+        <li>Product Management</li>
+        <li>Playbook Development</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- THE CHALLENGE -->
+<section class="statement">
+  <div class="ripple-bg tunnel-img"></div>
+  <h2>Let's explore opportunities together</h2>
+</section>
+
+<!-- TEAM -->
+<section class="objectives reveal">
+  <span class="eyebrow"></span>
+  <h2 class="section-title">Who is the <em>Leader</em></h2>
+  <div class="team-grid">
+    <div class="team-member">
+      <div class="avatar"><img src="team-img2.png" alt="Dr Raphael Kamanga"></div>
+      <div>
+        <div class="team-name">Dr Raphael Kamanga</div>
+        <div class="team-role">Director and Lead Consultant</div>
+        <p class="team-bio">Dr Raphael Kamanga is a dynamic business and technology leader with over 30 years’ working experience across various sectors including ICT, financial services, telecommunications, fintech and consulting. He has worked  at executive level for leading South African organisations for over 20 years.  He is multiskilled, with expertise in strategy development & implementation, IT Service Management, digital transformation, ICT infrastructure and governance. He has worked with clients and partners across the globe, including Africa, Asia, Europe and North America regions. He holds an MSc Information Systems from Leeds Beckett University( UK) and a PhD Information Systems from University of South Africa. He has acquired professional certifications in Microsoft, Cisco, ITIL and X-Road.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CLOSING -->
+<section id="contact" class="closing">
+  <div class="ripple-bg closing-img"></div>
+  <h2>Invite us to help you unlock your growth potential in this digital era</h2>
+  <a href="mailto:raphael@leadwoodsolution.com" class="btn solid whatsapp-btn" aria-label="Get in touch by email">
+    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M2 5.5C2 4.12 3.12 3 4.5 3h15C20.88 3 22 4.12 22 5.5v13c0 1.38-1.12 2.5-2.5 2.5h-15C3.12 21 2 19.88 2 18.5v-13zm2.4.3 8.13 6.1a1.5 1.5 0 0 0 1.94 0l8.13-6.1a1 1 0 0 0-.6-1.8H5a1 1 0 0 0-.6 1.8zM4 8.13V18.5c0 .28.22.5.5.5h15a.5.5 0 0 0 .5-.5V8.13l-7.34 5.5a3 3 0 0 1-3.62 0L4 8.13z"/></svg>
+    <span>Contact Us</span>
+  </a>
+</section>
+
+<footer>
+  <span>© 2009 Leadwood Solutions</span>
+  <span>Sunninghill, Sandton</span>
+</footer>
+
+<script>
+  const revealEls = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, { threshold: 0.12 });
+  revealEls.forEach(el => io.observe(el));
+</script>
+
+</body>
+</html>
